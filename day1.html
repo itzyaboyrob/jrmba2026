@@ -35,7 +35,7 @@
   }
 
   /* Stage: every slide is designed at 1280 x 720 and scaled to fit */
-  #viewport { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+  #viewport { position: relative; width: 100%; height: calc(100% - 56px); display: grid; place-items: center; }
   #stage { width: 1280px; height: 720px; position: relative; transform-origin: center center; flex: none; }
   .slide {
     position: absolute; inset: 0; overflow: hidden;
@@ -203,7 +203,7 @@
   /* Controls (hidden in print) */
   #bar { position: fixed; left: 0; right: 0; bottom: 0; height: 6px; background: transparent; padding-bottom: env(safe-area-inset-bottom, 0px); }
   #bar i { display: block; height: 6px; background: var(--gold); width: 0; transition: width .25s ease; }
-  #nav { position: fixed; right: 14px; bottom: calc(14px + env(safe-area-inset-bottom, 0px)); display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; opacity: .35; transition: opacity .2s; }
+  #nav { position: fixed; right: 14px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); height: 34px; display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; opacity: .35; transition: opacity .2s; }
   #nav:hover, #nav:focus-within { opacity: 1; }
   #nav button { font: inherit; border: 2px solid currentColor; background: transparent; color: inherit; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
   #nav button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
@@ -420,6 +420,7 @@
   <span id="count" aria-live="polite"></span>
   <button id="next" aria-label="Next slide">Next</button>
   <button id="clean" title="Hide placeholder highlights (H)">Hide highlights</button>
+  <button id="dl" type="button" onclick="window.jrmbaDownload && window.jrmbaDownload()" title="Download all 5 teams as a spreadsheet">Download teams</button>
 </div>
 
 <script>
@@ -662,6 +663,36 @@
                      stock === 0 ? "Ready to invest" : "Under budget. Nice!";
     r.querySelector(".meta").textContent = picks + (picks === 1 ? " company" : " companies") + (own ? " (" + own + " of your own)" : "");
   }
+
+  // Download all teams as a CSV (opens in Excel)
+  window.jrmbaDownload = function () {
+    function cell(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+    var lines = [["Team #","Team name","Pick type","Company","Ticker","Price","Shares","Total"].join(",")];
+    var summary = [["Team #","Team name","Companies","In stocks","Cash","Total"].join(",")];
+    for (var t = 1; t <= TEAMS; t++) {
+      var s = state[t], name = s.name || ("Team " + t), stock = 0, count = 0;
+      s.list.forEach(function (x) {
+        var c = x.idx === "" ? null : COMPANIES[x.idx], q = wholes(x.qty);
+        if (!c || !q) return;
+        stock += c[2] * q; count++;
+        lines.push([t, name, "From list", c[0], c[1], c[2], q, c[2] * q].map(cell).join(","));
+      });
+      s.own.forEach(function (x) {
+        var p = num(x.price), q = wholes(x.qty);
+        if (!p || !q) return;
+        stock += p * q; count++;
+        lines.push([t, name, "Own pick", x.co, x.tk.toUpperCase(), p, q, p * q].map(cell).join(","));
+      });
+      summary.push([t, name, count, stock, BUDGET - stock, BUDGET].map(cell).join(","));
+    }
+    var d = new Date(), stamp = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+    var csv = "\uFEFF" + "Junior MBA Stock Market Challenge,Downloaded " + stamp + "\n\nPICKS\n" + lines.join("\n") + "\n\nTEAM TOTALS\n" + summary.join("\n") + "\n";
+    var blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = "jrmba-teams-" + stamp + ".csv";
+    document.body.appendChild(a); a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  };
 
   for (var t = 1; t <= TEAMS; t++) build(t);
 
