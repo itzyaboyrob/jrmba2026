@@ -170,9 +170,12 @@
   /* Team portfolio slides */
   .slide.team-slide { padding: 30px 52px 50px; }
   .team-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
-  .team-name { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 900; font-size: 40px; border: none; border-bottom: 4px dashed #c9a20a; background: transparent; color: var(--ink); max-width: 700px; padding: 0 4px; }
+  .team-name { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 900; font-size: 40px; border: none; border-bottom: 4px dashed #c9a20a; background: transparent; color: var(--ink); max-width: 420px; padding: 0 4px; }
   .team-name:focus { outline: none; border-bottom-color: var(--green); }
   .team-head .lbl { font-size: 20px; font-weight: 700; opacity: .7; }
+  .team-head .members { margin-left: auto; display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; color: var(--green-deep); }
+  .team-head .members input { font: inherit; font-weight: 600; font-size: 16px; width: 430px; height: 32px; padding: 3px 10px; border: 2px solid #bdb7a0; border-radius: 8px; background: #fff; color: var(--ink); }
+  .team-head .members input:focus { outline: 3px solid var(--gold); border-color: var(--ink); }
   .pf { display: grid; grid-template-columns: 1fr 236px; grid-template-rows: auto auto; gap: 10px 20px; align-items: start; }
   .pf .lists { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
   .pf .ot { grid-column: 1; }
@@ -370,35 +373,35 @@
 
   <!-- TEAM 1 PORTFOLIO -->
   <section class="slide team-slide">
-    <div class="team-head"><input class="team-name" data-team="1" value="Team 1" aria-label="Team 1 name"><span class="lbl">portfolio</span></div>
+    <div class="team-head"><input class="team-name" data-team="1" value="Team 1" aria-label="Team 1 name"><span class="lbl">portfolio</span><label class="members"><span>Team members</span><input class="mem" data-team="1" type="text" placeholder="Type names here" aria-label="Team 1 members"></label></div>
     <div class="pf" data-team="1"></div>
     <div class="foot"><span>Stock Market Challenge</span><span class="n"></span></div>
   </section>
 
   <!-- TEAM 2 PORTFOLIO -->
   <section class="slide team-slide">
-    <div class="team-head"><input class="team-name" data-team="2" value="Team 2" aria-label="Team 2 name"><span class="lbl">portfolio</span></div>
+    <div class="team-head"><input class="team-name" data-team="2" value="Team 2" aria-label="Team 2 name"><span class="lbl">portfolio</span><label class="members"><span>Team members</span><input class="mem" data-team="2" type="text" placeholder="Type names here" aria-label="Team 2 members"></label></div>
     <div class="pf" data-team="2"></div>
     <div class="foot"><span>Stock Market Challenge</span><span class="n"></span></div>
   </section>
 
   <!-- TEAM 3 PORTFOLIO -->
   <section class="slide team-slide">
-    <div class="team-head"><input class="team-name" data-team="3" value="Team 3" aria-label="Team 3 name"><span class="lbl">portfolio</span></div>
+    <div class="team-head"><input class="team-name" data-team="3" value="Team 3" aria-label="Team 3 name"><span class="lbl">portfolio</span><label class="members"><span>Team members</span><input class="mem" data-team="3" type="text" placeholder="Type names here" aria-label="Team 3 members"></label></div>
     <div class="pf" data-team="3"></div>
     <div class="foot"><span>Stock Market Challenge</span><span class="n"></span></div>
   </section>
 
   <!-- TEAM 4 PORTFOLIO -->
   <section class="slide team-slide">
-    <div class="team-head"><input class="team-name" data-team="4" value="Team 4" aria-label="Team 4 name"><span class="lbl">portfolio</span></div>
+    <div class="team-head"><input class="team-name" data-team="4" value="Team 4" aria-label="Team 4 name"><span class="lbl">portfolio</span><label class="members"><span>Team members</span><input class="mem" data-team="4" type="text" placeholder="Type names here" aria-label="Team 4 members"></label></div>
     <div class="pf" data-team="4"></div>
     <div class="foot"><span>Stock Market Challenge</span><span class="n"></span></div>
   </section>
 
   <!-- TEAM 5 PORTFOLIO -->
   <section class="slide team-slide">
-    <div class="team-head"><input class="team-name" data-team="5" value="Team 5" aria-label="Team 5 name"><span class="lbl">portfolio</span></div>
+    <div class="team-head"><input class="team-name" data-team="5" value="Team 5" aria-label="Team 5 name"><span class="lbl">portfolio</span><label class="members"><span>Team members</span><input class="mem" data-team="5" type="text" placeholder="Type names here" aria-label="Team 5 members"></label></div>
     <div class="pf" data-team="5"></div>
     <div class="foot"><span>Stock Market Challenge</span><span class="n"></span></div>
   </section>
@@ -540,7 +543,7 @@
   function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
 
   function blank() {
-    var s = { name: "", list: [], own: [] };
+    var s = { name: "", members: "", list: [], own: [] };
     for (var i = 0; i < N; i++) s.list.push("");
     for (var j = 0; j < OWN_ROWS; j++) s.own.push({ co: "", tk: "", price: "", qty: "" });
     return s;
@@ -549,6 +552,7 @@
   function normalize(raw) {
     var s = blank(); raw = raw || {};
     s.name = raw.name || "";
+    s.members = raw.members || "";
     var L = raw.list || {};
     for (var k in L) {
       var v = L[k];
@@ -566,6 +570,7 @@
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
   function root(t) { return document.querySelector('.pf[data-team="' + t + '"]'); }
   function nameEl(t) { return document.querySelector('.team-name[data-team="' + t + '"]'); }
+  function memEl(t) { return document.querySelector('.mem[data-team="' + t + '"]'); }
 
   function setSync(t, text, cls) {
     var el = root(t).querySelector(".sync"); if (!el) return;
@@ -618,6 +623,8 @@
 
     var ne = nameEl(t);
     ne.addEventListener("input", function () { state[t].name = ne.value; fitName(t); save(t); });
+    var me = memEl(t);
+    me.addEventListener("input", function () { state[t].members = me.value; save(t); });
     r.addEventListener("input", function (e) {
       var tr = e.target.closest("tr"); if (!tr) return;
       var i = Number(tr.dataset.i), s = state[t];
@@ -645,6 +652,7 @@
       put(tr.querySelector(".price"), x.price); put(tr.querySelector(".qty"), x.qty);
     });
     put(nameEl(t), s.name || ("Team " + t)); fitName(t);
+    put(memEl(t), s.members || "");
     calc(t);
   }
 
@@ -676,7 +684,7 @@
   window.jrmbaDownload = function () {
     function cell(v) { v = v == null ? "" : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
     var lines = [["Team #","Team name","Pick type","Company","Ticker","Price","Shares","Total"].join(",")];
-    var summary = [["Team #","Team name","Companies","In stocks","Cash","Total"].join(",")];
+    var summary = [["Team #","Team name","Members","Companies","In stocks","Cash","Total"].join(",")];
     for (var t = 1; t <= TEAMS; t++) {
       var s = state[t], name = s.name || ("Team " + t), stock = 0, count = 0;
       s.list.forEach(function (qv, i) {
@@ -689,7 +697,7 @@
         stock += p * q; count++;
         lines.push([t, name, "Own pick", x.co, x.tk.toUpperCase(), p, q, p * q].map(cell).join(","));
       });
-      summary.push([t, name, count, stock, BUDGET - stock, BUDGET].map(cell).join(","));
+      summary.push([t, name, s.members, count, stock, BUDGET - stock, BUDGET].map(cell).join(","));
     }
     var d = new Date(), stamp = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
     var csv = "\uFEFF" + "Junior MBA Stock Market Challenge,Downloaded " + stamp + "\n\nPICKS\n" + lines.join("\n") + "\n\nTEAM TOTALS\n" + summary.join("\n") + "\n";
