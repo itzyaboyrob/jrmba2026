@@ -168,30 +168,38 @@
 
 
   /* Team portfolio slides */
-  .team-head { display: flex; align-items: baseline; gap: 18px; margin-bottom: 18px; }
-  .team-name { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 900; font-size: 50px; border: none; border-bottom: 4px dashed #c9a20a; background: transparent; color: var(--ink); max-width: 760px; padding: 0 4px; }
+  .slide.team-slide { padding: 30px 52px 50px; }
+  .team-head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+  .team-name { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 900; font-size: 40px; border: none; border-bottom: 4px dashed #c9a20a; background: transparent; color: var(--ink); max-width: 700px; padding: 0 4px; }
   .team-name:focus { outline: none; border-bottom-color: var(--green); }
-  .team-head .lbl { font-size: 22px; font-weight: 700; opacity: .7; }
-  .pf { display: grid; grid-template-columns: 1fr 300px; gap: 28px; align-items: start; }
-  .pf table { width: 100%; border-collapse: collapse; font-size: 17px; }
-  .pf th { text-align: left; background: var(--green); color: #fff; padding: 7px 8px; font-weight: 800; font-size: 15px; }
+  .team-head .lbl { font-size: 20px; font-weight: 700; opacity: .7; }
+  .pf { display: grid; grid-template-columns: 1fr 236px; grid-template-rows: auto auto; gap: 10px 20px; align-items: start; }
+  .pf .lists { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: start; }
+  .pf .ot { grid-column: 1; }
+  .pf .sum { grid-column: 2; grid-row: 1 / span 2; }
+  .pf table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .pf th { text-align: left; background: var(--green); color: #fff; padding: 4px 6px; font-weight: 800; font-size: 13px; }
   .pf th.r, .pf td.r { text-align: right; }
-  .pf td { border-bottom: 2px solid #d6d1bd; padding: 3px 6px; height: 40px; }
-  .pf tr.own td { background: var(--gold-soft); }
-  .pf tr.split td { border-top: 4px solid var(--ink); }
-  .pf select, .pf input { font: inherit; font-size: 17px; width: 100%; border: 2px solid #bdb7a0; border-radius: 6px; padding: 4px 6px; background: #fff; color: var(--ink); }
+  .pf td { border-bottom: 1px solid #d6d1bd; padding: 0 5px; height: 25px; }
+  .pf .lt td.nm { font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 0; }
+  .pf .lt td.tk { font-weight: 800; color: var(--green); font-size: 12px; }
+  .pf .lt tr.picked td { background: var(--gold-soft); }
+  .pf .ot td { height: 30px; background: #fffaf0; }
+  .pf .ot th { background: #8a6d00; }
+  .pf input { font: inherit; font-size: 14px; width: 100%; border: 1.5px solid #bdb7a0; border-radius: 5px; padding: 1px 5px; background: #fff; color: var(--ink); height: 21px; }
+  .pf .ot input { height: 24px; }
   .pf input.num { text-align: right; }
-  .pf select:focus, .pf input:focus { outline: 3px solid var(--gold); border-color: var(--ink); }
-  .pf .tk { font-weight: 800; color: var(--green); }
+  .pf input:focus { outline: 2px solid var(--gold); border-color: var(--ink); }
   .pf .tot { font-weight: 800; font-variant-numeric: tabular-nums; }
-  .pf .c-co { width: 34%; } .pf .c-tk { width: 13%; } .pf .c-pr { width: 15%; } .pf .c-qty { width: 14%; } .pf .c-tot { width: 24%; }
-  .sum { border: 6px solid var(--ink); border-radius: 20px; padding: 20px 22px; background: var(--paper); }
-  .sum .line { display: flex; justify-content: space-between; align-items: baseline; font-size: 19px; font-weight: 700; padding: 6px 0; }
-  .sum .line b { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-size: 32px; font-variant-numeric: tabular-nums; }
+  .pf .c-nm { width: 44%; } .pf .c-tk { width: 13%; } .pf .c-pr { width: 12%; } .pf .c-qty { width: 14%; } .pf .c-tot { width: 17%; }
+  .pf .o-co { width: 38%; } .pf .o-tk { width: 14%; } .pf .o-pr { width: 14%; } .pf .o-qty { width: 14%; } .pf .o-tot { width: 20%; }
+  .sum { border: 5px solid var(--ink); border-radius: 18px; padding: 16px 16px; background: var(--paper); }
+  .sum .line { display: flex; justify-content: space-between; align-items: baseline; font-size: 17px; font-weight: 700; padding: 5px 0; }
+  .sum .line b { font-family: "Fraunces", Georgia, serif; font-weight: 900; font-size: 27px; font-variant-numeric: tabular-nums; }
   .sum .line.total { border-top: 3px solid var(--ink); margin-top: 6px; padding-top: 10px; }
   .sum .bar { height: 18px; border: 3px solid var(--ink); border-radius: 999px; overflow: hidden; background: #fff; margin: 10px 0 12px; }
   .sum .bar i { display: block; height: 100%; width: 0; background: var(--green); transition: width .3s ease; }
-  .sum .status { font-weight: 800; font-size: 19px; padding: 10px 12px; border-radius: 10px; background: #e3f1e8; color: var(--green-deep); }
+  .sum .status { font-weight: 800; font-size: 16px; padding: 10px 12px; border-radius: 10px; background: #e3f1e8; color: var(--green-deep); }
   .sum .status.over { background: #fde2e1; color: #a31b14; }
   .sum .meta { font-size: 16px; margin-top: 12px; opacity: .75; }
   .sum .reset { margin-top: 14px; font: inherit; font-size: 15px; font-weight: 700; border: 2px solid var(--ink); background: transparent; border-radius: 8px; padding: 6px 12px; cursor: pointer; }
@@ -524,7 +532,8 @@
     ["Coca-Cola","KO",87],["PepsiCo","PEP",126],["Hershey","HSY",161],["Costco","COST",946],["Walmart","WMT",106],
     ["Target","TGT",153],["Hasbro","HAS",90],["Home Depot","HD",285],["DoorDash","DASH",190],["Six Flags Entertainment","FUN",12]
   ];
-  var BUDGET = 10000, LIST_ROWS = 5, OWN_ROWS = 5, TEAMS = 5, KEY = "jrmba-portfolios-2026", DB_PATH = "jrmba2026/teams/";
+  var BUDGET = 10000, OWN_ROWS = 5, TEAMS = 5, KEY = "jrmba-portfolios-2026", DB_PATH = "jrmba2026/teams/";
+  var N = COMPANIES.length, SPLIT = Math.ceil(N / 2);
   var state = {}, db = null, timers = {};
 
   try { state = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { state = {}; }
@@ -532,15 +541,20 @@
 
   function blank() {
     var s = { name: "", list: [], own: [] };
-    for (var i = 0; i < LIST_ROWS; i++) s.list.push({ idx: "", qty: "" });
+    for (var i = 0; i < N; i++) s.list.push("");
     for (var j = 0; j < OWN_ROWS; j++) s.own.push({ co: "", tk: "", price: "", qty: "" });
     return s;
   }
-  // Firebase can drop empty fields, so always rebuild a full team shape
+  // Rebuild a full team shape. Also converts the older 5-dropdown format (list of {idx, qty}).
   function normalize(raw) {
     var s = blank(); raw = raw || {};
     s.name = raw.name || "";
-    for (var i = 0; i < LIST_ROWS; i++) { var r = (raw.list || {})[i] || {}; s.list[i] = { idx: r.idx == null ? "" : String(r.idx), qty: r.qty == null ? "" : String(r.qty) }; }
+    var L = raw.list || {};
+    for (var k in L) {
+      var v = L[k];
+      if (v && typeof v === "object") { if (v.idx !== "" && v.idx != null && v.qty) s.list[Number(v.idx)] = String(v.qty); }
+      else if (Number(k) < N) s.list[Number(k)] = v == null ? "" : String(v);
+    }
     for (var j = 0; j < OWN_ROWS; j++) { var o = (raw.own || {})[j] || {}; s.own[j] = { co: o.co || "", tk: o.tk || "", price: o.price == null ? "" : String(o.price), qty: o.qty == null ? "" : String(o.qty) }; }
     return s;
   }
@@ -557,7 +571,6 @@
     var el = root(t).querySelector(".sync"); if (!el) return;
     el.textContent = text; el.className = "sync" + (cls ? " " + cls : "");
   }
-
   function save(t) {
     saveLocal();
     if (!db) return;
@@ -570,27 +583,31 @@
     }, 400);
   }
 
-  function build(t) {
-    var opts = '<option value="">Choose a company</option>' + COMPANIES.map(function (c, i) {
-      return '<option value="' + i + '">' + esc(c[0]) + '</option>'; }).join("");
+  function listTable(from, to) {
     var rows = "";
-    for (var i = 0; i < LIST_ROWS; i++) {
-      rows += '<tr data-kind="list" data-i="' + i + '"><td><select aria-label="Company ' + (i + 1) + '">' + opts + '</select></td>' +
-        '<td class="tk"></td><td class="r pr"></td>' +
-        '<td><input class="num qty" type="number" min="0" step="1" inputmode="numeric" aria-label="Shares"></td><td class="r tot"></td></tr>';
+    for (var i = from; i < to; i++) {
+      var c = COMPANIES[i];
+      rows += '<tr data-kind="list" data-i="' + i + '"><td class="nm">' + esc(c[0]) + '</td><td class="tk">' + c[1] + '</td>' +
+        '<td class="r">$' + c[2] + '</td><td><input class="num qty" type="number" min="0" step="1" inputmode="numeric" aria-label="Shares of ' + esc(c[0]) + '"></td><td class="r tot"></td></tr>';
     }
+    return '<table class="lt"><colgroup><col class="c-nm"><col class="c-tk"><col class="c-pr"><col class="c-qty"><col class="c-tot"></colgroup>' +
+      '<thead><tr><th>Company</th><th>Ticker</th><th class="r">Price</th><th class="r">Shares</th><th class="r">Total</th></tr></thead><tbody>' + rows + '</tbody></table>';
+  }
+
+  function build(t) {
+    var own = "";
     for (var j = 0; j < OWN_ROWS; j++) {
-      rows += '<tr class="own' + (j === 0 ? ' split' : '') + '" data-kind="own" data-i="' + j + '">' +
+      own += '<tr data-kind="own" data-i="' + j + '">' +
         '<td><input class="co" type="text" placeholder="Your pick ' + (j + 1) + '" aria-label="Your company ' + (j + 1) + '"></td>' +
         '<td><input class="tkin" type="text" placeholder="Ticker" aria-label="Ticker"></td>' +
         '<td><input class="num price" type="number" min="0" step="1" inputmode="numeric" placeholder="$" aria-label="Price"></td>' +
-        '<td><input class="num qty" type="number" min="0" step="1" inputmode="numeric" aria-label="Shares"></td><td class="r tot"></td></tr>';
+        '<td><input class="num qty" type="number" min="0" step="1" inputmode="numeric" placeholder="Shares" aria-label="Shares"></td><td class="r tot"></td></tr>';
     }
     var r = root(t);
     r.innerHTML =
-      '<table><colgroup><col class="c-co"><col class="c-tk"><col class="c-pr"><col class="c-qty"><col class="c-tot"></colgroup>' +
-      '<thead><tr><th>Company</th><th>Ticker</th><th class="r">Price</th><th class="r">Shares</th><th class="r">Total</th></tr></thead>' +
-      '<tbody>' + rows + '</tbody></table>' +
+      '<div class="lists">' + listTable(0, SPLIT) + listTable(SPLIT, N) + '</div>' +
+      '<table class="ot"><colgroup><col class="o-co"><col class="o-tk"><col class="o-pr"><col class="o-qty"><col class="o-tot"></colgroup>' +
+      '<thead><tr><th>Your own picks (up to 5)</th><th>Ticker</th><th class="r">Price</th><th class="r">Shares</th><th class="r">Total</th></tr></thead><tbody>' + own + '</tbody></table>' +
       '<div class="sum"><div class="line"><span>In stocks</span><b class="s-stock">$0</b></div>' +
       '<div class="line"><span>Cash</span><b class="s-cash">$10,000</b></div>' +
       '<div class="line total"><span>Total</span><b>$10,000</b></div>' +
@@ -601,16 +618,12 @@
 
     var ne = nameEl(t);
     ne.addEventListener("input", function () { state[t].name = ne.value; fitName(t); save(t); });
-
     r.addEventListener("input", function (e) {
       var tr = e.target.closest("tr"); if (!tr) return;
-      var i = tr.dataset.i, s = state[t];
-      if (tr.dataset.kind === "list") {
-        s.list[i] = { idx: tr.querySelector("select").value, qty: tr.querySelector(".qty").value };
-      } else {
-        s.own[i] = { co: tr.querySelector(".co").value, tk: tr.querySelector(".tkin").value,
-                     price: tr.querySelector(".price").value, qty: tr.querySelector(".qty").value };
-      }
+      var i = Number(tr.dataset.i), s = state[t];
+      if (tr.dataset.kind === "list") s.list[i] = tr.querySelector(".qty").value;
+      else s.own[i] = { co: tr.querySelector(".co").value, tk: tr.querySelector(".tkin").value,
+                        price: tr.querySelector(".price").value, qty: tr.querySelector(".qty").value };
       calc(t); save(t);
     });
     r.querySelector(".reset").addEventListener("click", function () {
@@ -622,13 +635,10 @@
 
   function fitName(t) { var ne = nameEl(t); ne.style.width = Math.max(5, ne.value.length + 1) + "ch"; }
 
-  // Put state into the inputs. Skips whatever box someone is typing in right now.
   function fill(t) {
     var s = state[t], r = root(t), active = document.activeElement;
     function put(el, v) { if (el !== active) el.value = v; }
-    r.querySelectorAll('tr[data-kind="list"]').forEach(function (tr) {
-      var x = s.list[tr.dataset.i]; put(tr.querySelector("select"), x.idx); put(tr.querySelector(".qty"), x.qty);
-    });
+    r.querySelectorAll('tr[data-kind="list"]').forEach(function (tr) { put(tr.querySelector(".qty"), s.list[tr.dataset.i]); });
     r.querySelectorAll('tr[data-kind="own"]').forEach(function (tr) {
       var x = s.own[tr.dataset.i];
       put(tr.querySelector(".co"), x.co); put(tr.querySelector(".tkin"), x.tk);
@@ -641,12 +651,10 @@
   function calc(t) {
     var r = root(t), s = state[t], stock = 0, picks = 0, own = 0;
     r.querySelectorAll('tr[data-kind="list"]').forEach(function (tr) {
-      var x = s.list[tr.dataset.i], c = x.idx === "" ? null : COMPANIES[x.idx];
-      var q = wholes(x.qty), tot = c ? c[2] * q : 0;
-      tr.querySelector(".tk").textContent = c ? c[1] : "";
-      tr.querySelector(".pr").textContent = c ? "$" + c[2] : "";
+      var i = Number(tr.dataset.i), q = wholes(s.list[i]), tot = COMPANIES[i][2] * q;
       tr.querySelector(".tot").textContent = tot ? money(tot) : "";
-      stock += tot; if (c && q) picks++;
+      tr.classList.toggle("picked", tot > 0);
+      stock += tot; if (tot) picks++;
     });
     r.querySelectorAll('tr[data-kind="own"]').forEach(function (tr) {
       var x = s.own[tr.dataset.i], tot = num(x.price) * wholes(x.qty);
@@ -671,15 +679,13 @@
     var summary = [["Team #","Team name","Companies","In stocks","Cash","Total"].join(",")];
     for (var t = 1; t <= TEAMS; t++) {
       var s = state[t], name = s.name || ("Team " + t), stock = 0, count = 0;
-      s.list.forEach(function (x) {
-        var c = x.idx === "" ? null : COMPANIES[x.idx], q = wholes(x.qty);
-        if (!c || !q) return;
+      s.list.forEach(function (qv, i) {
+        var c = COMPANIES[i], q = wholes(qv); if (!q) return;
         stock += c[2] * q; count++;
         lines.push([t, name, "From list", c[0], c[1], c[2], q, c[2] * q].map(cell).join(","));
       });
       s.own.forEach(function (x) {
-        var p = num(x.price), q = wholes(x.qty);
-        if (!p || !q) return;
+        var p = num(x.price), q = wholes(x.qty); if (!p || !q) return;
         stock += p * q; count++;
         lines.push([t, name, "Own pick", x.co, x.tk.toUpperCase(), p, q, p * q].map(cell).join(","));
       });
@@ -696,7 +702,6 @@
 
   for (var t = 1; t <= TEAMS; t++) build(t);
 
-  // Connect to Firebase if the config has been filled in
   try {
     var cfg = window.FIREBASE_CONFIG || {};
     if (window.firebase && cfg.apiKey && cfg.apiKey.indexOf("PASTE") === -1) {
