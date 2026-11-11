@@ -1095,6 +1095,9 @@
   .dfn .ps-key div { padding: 8px 16px; font-size: 20px; }
   .dfn .ps-bar { margin-top: 10px; }
   .dfn .ps-tip { margin-bottom: 0; padding: 10px 18px; font-size: 23px; }
+  #nav .cloud { font-size: 13px; font-weight: 800; padding: 3px 10px; border-radius: 999px; border: 2px solid currentColor; white-space: nowrap; }
+  #nav .cloud.ok { color: #157A3B; }
+  #nav .cloud.bad { color: #B42318; }
 </style>
 </head>
 <body>
@@ -1580,6 +1583,7 @@
 <div id="controls">
 <div id="bar"><i></i></div>
 <div id="nav" aria-label="Slide controls">
+  <span id="cloud" class="cloud" title="Where your Week 4 entries are saved">Saved on this computer</span>
   <button id="prev" type="button" aria-label="Previous slide">Prev</button>
   <span id="count" aria-live="polite"></span>
   <button id="next" type="button" aria-label="Next slide">Next</button>
@@ -1962,6 +1966,20 @@ const TEAMS = [
 </html>
 
 </script>
+<!-- ===== FIREBASE: same project as Day 1. Week 4 saves to its own path (jrmba2026/week4) and never touches the Day 1 portfolios. ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+  window.FIREBASE_CONFIG = {
+    apiKey: "AIzaSyA09a2PYbnSdBFChQuZaJRFNJbM63CecTI",
+    authDomain: "jrmba-855ca.firebaseapp.com",
+    databaseURL: "https://jrmba-855ca-default-rtdb.firebaseio.com",
+    projectId: "jrmba-855ca",
+    storageBucket: "jrmba-855ca.firebasestorage.app",
+    messagingSenderId: "864001184605",
+    appId: "1:864001184605:web:11ebc4cb72505d4d004eb4"
+  };
+</script>
 <script>
 (function () {
   /* ===== EDIT HERE =====
@@ -2003,6 +2021,8 @@ const TEAMS = [
       scores: [[0, 0, 0], [0, 0, 0], [0, 0, 0], [0, 0, 0]],
       votes: [0, 0, 0, 0],
       pick: null,
+      lensSeen: [false, false, false, false, false],
+      _ts: 0,
       improve: { pd: ["", ""], cx: ["", ""], sp: ["", ""], mk: ["", ""] }
     };
   }
@@ -2011,7 +2031,9 @@ const TEAMS = [
     var saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved && saved.teams) { var b = blank(); for (var k in b) if (saved[k] != null) b[k] = saved[k]; S = b; }
   } catch (e) {}
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  var cloudPush = function () {};
+  function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+  function save() { S._ts = Date.now(); saveLocal(); cloudPush(); }
   function getPath(p) { return p.split(".").reduce(function (o, k) { return o == null ? o : o[k]; }, S); }
   function setPath(p, v) { var ks = p.split("."), o = S; for (var i = 0; i < ks.length - 1; i++) o = o[ks[i]]; o[ks[ks.length - 1]] = v; }
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -2514,7 +2536,8 @@ const TEAMS = [
     if (e.key === "R" && e.shiftKey && !(e.target.closest && e.target.closest("input, [contenteditable]"))) {
       if (confirm("Clear EVERYTHING entered in this Week 4 deck (clues, problem statement, inventions, scores, votes)?")) {
         try { localStorage.removeItem(KEY); } catch (er) {}
-        location.reload();
+        if (cloudRef) cloudRef.remove().then(function () { location.reload(); }, function () { location.reload(); });
+        else location.reload();
       }
     }
   });
@@ -2529,6 +2552,56 @@ const TEAMS = [
     f.style.transform = "scale(" + s + ")";
   }
   window.addEventListener("resize", function () { fit(); fitEmbed(); });
+  /* ---------- cloud save (Firebase Realtime Database, path jrmba2026/week4) ----------
+     Every change saves on this computer right away and to the cloud a moment later.
+     Whichever copy was changed most recently wins, so the deck picks up where you left off on any computer. */
+  var DB_PATH = "jrmba2026/week4", seenRemote = false, cloudRef = null, pushTimer = 0, cloudEl = document.getElementById("cloud");
+  function setCloud(text, cls) { cloudEl.textContent = text; cloudEl.className = "cloud" + (cls ? " " + cls : ""); }
+  function refreshFields() {
+    document.querySelectorAll("[data-bind]").forEach(function (el) {
+      if (el === document.activeElement) return;
+      var v = getPath(el.getAttribute("data-bind")) || "";
+      if (el.tagName === "INPUT") { if (el.value !== v) el.value = v; } else if (el.textContent !== v) el.textContent = v;
+    });
+  }
+  function adopt(remote) {
+    var b = blank();
+    for (var k in b) S[k] = remote[k] != null ? remote[k] : b[k];
+    S.teams = b.teams.map(function (t, i) { var r = (remote.teams || [])[i] || {}; for (var f in t) if (r[f] != null) t[f] = r[f]; return t; });
+    saveLocal(); refreshFields(); render(); renderLens();
+  }
+  try {
+    var cfg = window.FIREBASE_CONFIG || {};
+    if (window.firebase && cfg.apiKey) {
+      if (!firebase.apps.length) firebase.initializeApp(cfg);
+      cloudRef = firebase.database().ref(DB_PATH);
+      setCloud("Connecting to cloud\u2026", "");
+      cloudPush = function () {
+        clearTimeout(pushTimer);
+        setCloud("Saving\u2026", "");
+        pushTimer = setTimeout(function () {
+          cloudRef.set(JSON.parse(JSON.stringify(S)))
+            .then(function () { setCloud("Saved to cloud", "ok"); })
+            .catch(function () { setCloud("Cloud save failed. Saved on this computer.", "bad"); });
+        }, 500);
+      };
+      cloudRef.on("value", function (snap) {
+        var remote = snap.val();
+        if (!remote || !remote._ts) {
+          // Cloud copy is empty: first use pushes this computer's entries up; a reset elsewhere (Shift+R) clears this one too.
+          if (seenRemote) { adopt({}); S._ts = 0; saveLocal(); setCloud("Saved to cloud", "ok"); }
+          else if (S._ts) cloudPush(); else setCloud("Saved to cloud", "ok");
+          return;
+        }
+        seenRemote = true;
+        if (remote._ts > (S._ts || 0)) adopt(remote);
+        else if (remote._ts < (S._ts || 0)) { cloudPush(); return; }
+        setCloud("Saved to cloud", "ok");
+      }, function () { setCloud("Cloud unavailable. Saving on this computer.", "bad"); cloudPush = function () {}; });
+      firebase.database().ref(".info/connected").on("value", function (c) { if (c.val() === false && cloudRef) setCloud("Offline. Saving on this computer.", "bad"); });
+    }
+  } catch (e) { cloudRef = null; setCloud("Saved on this computer", ""); }
+
   bindAll();
   fit();
   var start = parseInt((location.hash || "").slice(1), 10);
