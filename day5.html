@@ -1560,6 +1560,11 @@
   .slide:has(.fxc.trap.shown) .good .pin.trap circle { fill: var(--gold); stroke-dasharray: none; }
   .bpx { grid-template-columns: 440px 1fr; gap: 20px; }
   .bpx.two .fxc .fxt { font-size: 22px; }
+
+  /* Slide 10: the logo is the only image */
+  .cs-pic.logo-only { background: #fff; padding: 24px; }
+  .cs-pic .blogo.big { position: static; width: 100%; height: 100%; max-height: 260px; object-fit: contain; object-position: center; }
+  .cs-pic .cpn-big { font-family: "Fraunces", Georgia, serif; font-variation-settings: "SOFT" 100; font-weight: 900; font-size: 52px; line-height: 1.05; text-align: center; color: var(--green-deep); }
 </style>
 </head>
 <body>
@@ -1838,7 +1843,7 @@
       <div class="cs-tabs noadv" id="cs-tabs" role="tablist"></div></div>
     <div class="cs noadv" id="cs"></div>
     <div class="foot"><span>What makes a business successful?</span><span class="n"></span></div>
-    <aside class="fnote"><b>Scrub Daddy, LEGO, Crocs</b><span class="tm">15:00&ndash;22:00</span><ul><li>About two minutes each. Read the question and take a few guesses out loud. Then click <b>Reveal possible reasons</b>.</li><li><b>Scrub Daddy:</b> design, usefulness, standing out from ordinary sponges.</li><li><b>LEGO:</b> creativity, many kinds of sets, the building experience, a trusted brand.</li><li><b>Crocs:</b> comfort, customizing, personal style. Not everyone likes them, and that&rsquo;s fine.</li><li>Logos load from the companies&rsquo; websites, so they need internet. If one fails, the company name shows instead. Use <b>Add photo</b> to swap the drawing for a product photo you have saved; it stays in this browser.</li><li>Close with: &ldquo;All three create value that customers care about.&rdquo;</li></ul></aside>
+    <aside class="fnote"><b>Scrub Daddy, LEGO, Crocs</b><span class="tm">15:00&ndash;22:00</span><ul><li>About two minutes each. Read the question and take a few guesses out loud. Then click <b>Reveal possible reasons</b>.</li><li><b>Scrub Daddy:</b> design, usefulness, standing out from ordinary sponges.</li><li><b>LEGO:</b> creativity, many kinds of sets, the building experience, a trusted brand.</li><li><b>Crocs:</b> comfort, customizing, personal style. Not everyone likes them, and that&rsquo;s fine.</li><li>Logos load from the companies&rsquo; websites, so they need internet. If one fails, the company name shows in big letters instead.</li><li>Close with: &ldquo;All three create value that customers care about.&rdquo;</li></ul></aside>
   </section>
 
   <!-- ===================== 4. INNOVATION LESSON ===================== -->
@@ -2698,8 +2703,7 @@ const TEAMS = [
   csTabs.innerHTML = CASES.map(function (c, k) { return '<button type="button" class="cs-tab" role="tab" data-c="' + k + '">' + esc(c.n) + '<span class="done" aria-label="revealed">&#10003;</span></button>'; }).join("");
   csEl.innerHTML = CASES.map(function (c, k) {
     return '<div class="cs-panel" data-c="' + k + '" style="display:contents">' +
-      '<div class="cs-pic" data-c="' + k + '">' + (c.logo ? '<img class="blogo" alt="' + esc(c.n) + ' logo" src="' + esc(c.logo) + '" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<span class=cpn>' + esc(c.n) + '</span>\'">' : '<span class="cpn">' + esc(c.n) + '</span>') + '<svg class="prod" aria-hidden="true"><use href="#' + c.art + '"/></svg>' +
-      '<span class="pbtns"><button type="button" class="mini" data-up="' + k + '">Add photo</button><button type="button" class="mini ghost" data-rm="' + k + '">Remove photo</button></span></div>' +
+      '<div class="cs-pic logo-only" data-c="' + k + '"><img class="blogo big" alt="' + esc(c.n) + ' logo" src="' + esc(c.logo) + '" referrerpolicy="no-referrer" onerror="this.outerHTML=\'<span class=cpn-big>' + esc(c.n) + '</span>\'"></div>' +
       '<div class="cs-r"><p class="cs-q">' + esc(c.q) + '</p>' +
       '<div class="cs-bar"><button type="button" class="mini gold" data-rev="' + k + '">Reveal possible reasons</button></div>' +
       '<div class="cs-rev hidden">' + c.r.map(function (r) { return '<div class="rsn"><b>' + esc(r.k) + "</b><span>" + esc(r.t) + "</span></div>"; }).join("") +
@@ -2707,10 +2711,8 @@ const TEAMS = [
   }).join("");
   csTabs.addEventListener("click", function (e) { var b = e.target.closest(".cs-tab"); if (!b) return; S.caseCur = +b.getAttribute("data-c"); save(); renderCases(); });
   csEl.addEventListener("click", function (e) {
-    var r = e.target.closest("[data-rev]"), u = e.target.closest("[data-up]"), m = e.target.closest("[data-rm]");
+    var r = e.target.closest("[data-rev]");
     if (r) { var k = +r.getAttribute("data-rev"); S.cases[k].shown = !S.cases[k].shown; save(); renderCases(S.cases[k].shown); }
-    if (u) { var ku = +u.getAttribute("data-up"); pickImage("case" + ku, renderCases); }
-    if (m) { setImg("case" + m.getAttribute("data-rm"), null); renderCases(); }
   });
   function renderCases(pop) {
     var c = S.caseCur || 0;
@@ -2721,11 +2723,6 @@ const TEAMS = [
       var rv = p.querySelector(".cs-rev"); rv.classList.toggle("hidden", !S.cases[k].shown);
       if (on && pop === true) { rv.classList.remove("pop"); void rv.offsetWidth; rv.classList.add("pop"); }
       p.querySelector("[data-rev]").textContent = S.cases[k].shown ? "Hide reasons" : "Reveal possible reasons";
-      var pic = p.querySelector(".cs-pic"), url = getImg("case" + k), im = pic.querySelector("img.up");
-      if (url && !im) { im = document.createElement("img"); im.className = "up"; im.alt = CASES[k].n + " product photo"; pic.insertBefore(im, pic.querySelector(".pbtns")); }
-      if (im) { if (url) im.src = url; else im.remove(); }
-      p.querySelector("[data-rm]").hidden = !url;
-      p.querySelector("[data-up]").textContent = url ? "Change photo" : "Add photo";
     });
   }
 
